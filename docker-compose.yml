@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  db:
+    container_name: nextGql
+    image: postgres:13
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nextGql
+    restart: always
+    user: postgres
+  next_gql:
+    container_name: next_gql
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    tty: true
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    links:
+      - "db:db"
+volumes:
+  db-data:
